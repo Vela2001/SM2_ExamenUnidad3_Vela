@@ -1,3 +1,10 @@
+### Información de entrega
+
+**Nombre del curso:** Soluciones Móviles II  
+**Fecha:** 27/06/2025  
+**Nombre Completo:** Abraham Jesús Vela Vargas  
+**URL del repositorio:** [https://github.com/Vela2001/SM2_ExamenUnidad3_Vela](https://github.com/Vela2001/SM2_ExamenUnidad3_Vela)
+
 # 📱 Aplicativo Móvil de Gestión de Tickets de Soporte - MDP
 
 Este proyecto corresponde al desarrollo de una solución tecnológica orientada a mejorar la gestión de solicitudes técnicas dentro de la **Municipalidad Distrital de Pocollay (MDP)**. Se trata de una aplicación móvil multiplataforma desarrollada con **Flutter** y respaldada por **Firebase**, enfocada en optimizar el registro, seguimiento y resolución de incidencias internas.
@@ -77,19 +84,49 @@ El sistema sigue un enfoque **cliente-servidor** con una arquitectura modular qu
 
 ---
 
-## 👥 Equipo de Desarrollo
+### Estructura de carpetas `.github/workflows/`
 
-| Nombre                        | Rol                            |
-|------------------------------|---------------------------------|
-| Rodrigo Martin De La Cruz    | Jefe de Proyecto / Desarrollador |
-| Abraham Jesús Vela Vargas    | Programador / QA                |
-| Juan Jose Perez Vizcarra     | Integrador Firebase             |
-| Raúl Marcelo Cuadros Napa    | UI/UX Designer                  |
-| Marjiory Grace Llantay Machaca | QA Tester                     |
-| Cristian Aldair Quispe Levano| Documentación y Soporte         |
+A continuación se muestra la estructura de carpetas y archivos dentro de `.github/workflows/`:
 
----
+![Estructura de carpetas .github](imagenes/sc1.png)
 
+### Contenido del archivo `quality-check.yml`
 
+![Contenido del archivo quality-check.yml](imagenes/sc2.png)
 
+## Análisis de la Ejecución del Workflow (sc3.png)
 
+La imagen muestra los resultados de una ejecución del workflow `quality-check.yml` en GitHub Actions, donde se identificó un error:
+
+- **Estado general:** El job "analyze" falló hace 2 minutos.
+- **Ubicación del error:** Línea 6 del workflow.
+- **Problema detectado:** Hay un error en el paso "Set up Dutter" (posiblemente un typo de "Flutter").
+- **Pasos ejecutados:** A pesar del error, el workflow completó todas las etapas incluyendo checkout, instalación de dependencias, ejecución de tests y análisis.
+
+**Acciones recomendadas:**
+1. Verificar la ortografía de "Flutter" en el archivo YAML.
+2. Revisar la línea 6 del workflow para corregir la configuración.
+3. Asegurar que la versión de Flutter especificada es compatible con el proyecto.
+
+![Captura del archivo quality-check.yml](imagenes/sc3.png)
+
+## Resultados del Análisis de Calidad
+
+El análisis de código (`flutter analyze`) detectó **72 problemas** en el proyecto:
+
+- **Errores:** 1 (falló el proceso)
+- **Advertencias (warnings):** 19 (incluyen imports no usados, variables no utilizadas y comparaciones innecesarias)
+- **Recomendaciones (info):** 52 (problemas de estilo, uso de `BuildContext` en async, parámetros `key` faltantes, etc.)
+
+**Problemas principales:**
+1. Uso de `print()` en código de producción (`avoid_print`)
+2. Uso de tipos privados en APIs públicas
+3. Falta de parámetros `key` en widgets públicos
+4. Uso de `BuildContext` en operaciones asíncronas (riesgo de memory leaks)
+5. Métodos deprecados (`withOpacity`)
+
+**Acción requerida:**  
+Corregir estos problemas para mejorar la calidad y mantenibilidad del código. El workflow fallará hasta que se resuelva al menos el error crítico.
+![Captura del resultado quality-check.yml](imagenes/sc4.png)
+
+![Captura](imagenes/sc5.png)
