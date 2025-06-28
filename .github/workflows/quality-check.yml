@@ -30,5 +30,8 @@ jobs:
       - name: Generate mocks
         run: flutter pub run build_runner build --delete-conflicting-outputs
 
+      - name: Analyze project
+        run: flutter analyze
+
       - name: Run unit tests
         run: flutter test
