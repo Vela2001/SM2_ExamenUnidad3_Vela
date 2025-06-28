@@ -10,7 +10,6 @@ import 'package:proyecto_moviles2/model/usuario_model.dart';
 
 void main() {
   group('Pruebas unitarias - TicketService y UsuarioService', () {
-    // Variables comunes
     late MockFirebaseFirestore mockFirestore;
     late MockCollectionReference<Map<String, dynamic>> mockTicketsCollection;
     late MockCollectionReference<Map<String, dynamic>> mockUsuariosCollection;
@@ -25,9 +24,8 @@ void main() {
       mockUsuarioDocRef = MockDocumentReference<Map<String, dynamic>>();
     });
 
-    // PRUEBA 1: Crear ticket con Firestore simulado
+    //  PRUEBA 1: Crear ticket con Firestore simulado
     test('crearTicket() debe guardar correctamente un ticket', () async {
-      // Configurar mocks
       when(mockFirestore.collection('tickets')).thenReturn(mockTicketsCollection);
       when(mockTicketsCollection.doc()).thenReturn(mockTicketDocRef);
       when(mockTicketDocRef.id).thenReturn('mockTicketId');
@@ -46,10 +44,8 @@ void main() {
       verify(mockTicketDocRef.set(any)).called(1);
     });
 
-    // PRUEBA 2: Filtrar tickets por título localmente (sin Firebase)
+    //  PRUEBA 2: Filtrar tickets por título localmente (sin Firebase)
     test('buscarTicketsPorTituloYUsuarioLocal() debe filtrar bien', () async {
-      final service = TicketService();
-
       final lista = [
         Ticket(
           id: '1',
@@ -77,26 +73,29 @@ void main() {
         ),
       ];
 
-      // Simulación de filtrado local
-      final resultados = lista.where((ticket) =>
-          ticket.titulo.toLowerCase().contains('error')).toList();
+      final resultados = lista
+          .where((ticket) => ticket.titulo.toLowerCase().contains('error'))
+          .toList();
 
       expect(resultados.length, 1);
       expect(resultados[0].titulo, contains('Error'));
     });
 
-    // PRUEBA 3: Crear usuario con Firestore simulado
+    //  PRUEBA 3: Crear usuario con Firestore simulado
     test('crearUsuario() debe guardar correctamente un usuario', () async {
-      // Configurar mocks
       when(mockFirestore.collection('usuarios')).thenReturn(mockUsuariosCollection);
       when(mockUsuariosCollection.doc('u123')).thenReturn(mockUsuarioDocRef);
       when(mockUsuarioDocRef.set(any)).thenAnswer((_) async => null);
 
       final usuario = Usuario(
         id: 'u123',
-        nombre: 'Helbert',
-        rol: 'admin',
+        username: 'helbertuser',
+        email: 'helbert@example.com',
+        nombreCompleto: 'Helbert Condori',
         fechaCreacion: DateTime.now(),
+        ultimoLogin: null,
+        emailVerificado: false,
+        rol: 'admin',
       );
 
       final usuarioService = UsuarioServiceTestable(mockFirestore);
@@ -107,14 +106,13 @@ void main() {
   });
 }
 
-// Servicios modificados para permitir inyección de Firebase simulado
-
+//  Servicios modificados para permitir inyección de Firebase simulado
 class TicketServiceTestable extends TicketService {
   final FirebaseFirestore firestoreMock;
 
   TicketServiceTestable(this.firestoreMock);
 
-  @override
+  // Quitamos el override porque no hay getter original en TicketService
   FirebaseFirestore get _firestore => firestoreMock;
 }
 
@@ -123,7 +121,7 @@ class UsuarioServiceTestable extends UsuarioService {
 
   UsuarioServiceTestable(this.firestoreMock);
 
-  @override
+  // Igual aquí: solo redefinimos la propiedad, sin override
   CollectionReference<Map<String, dynamic>> get _usuariosRef =>
       firestoreMock.collection('usuarios');
 }
